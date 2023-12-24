@@ -1,6 +1,13 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+const colorStyle = {
+    primary: "",
+    secondary: "",
+    primeTable: "",
+    bg: ""
+}
+
 const tableHeaderContent = () => {
     return (<>
         <tr>
@@ -74,10 +81,6 @@ const createContentTableForScore = (questionGroup = "Easy", answerScoreArrs = []
             <tbody>
                 <tr className="border-0">
                     {generateColumnScoreByQuestionair(questionGroup, answerScoreArrs)}
-                    {/* <td>1</td>
-                    <td>1</td>
-                    <td>1</td>
-                    <td>-</td> */}
                 </tr>
             </tbody>
         </table>
@@ -205,13 +208,12 @@ export default function Dashboard() {
 
     return (
         <main className={`flex min-h-screen flex-col items-center`}>
-            <div className="m-10">
+            <div className="m-5">
                 <h1 className="text-white text-5xl font-bold">Compose Battle</h1>
             </div>
 
-            <div className="w-full mx-auto px-24 my-auto">
-                {/* dark:bg-gray-700 */}
-                <div class="relative overflow-x-auto h-[39rem] shadow-md sm:rounded-lg ">
+            <div className="w-full mx-auto px-24">
+                <div class="relative overflow-x-auto h-[100vh] shadow-md sm:rounded-lg ">
                     <table class="w-full text-left text-gray-500 dark:text-gray-400 overscroll-y-auto">
                         <thead className="text-xs sticky top-0 py-3 text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
                             style={{ zIndex: "999 !important" }}>
