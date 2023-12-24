@@ -42,9 +42,22 @@ const generateHeaderRowQuestionair = (questionGroup) => {
     }
 }
 
-const generateColumnScoreByQuestionair = (answers) => {
+const generateColumnScoreByQuestionair = (questionGroup, answers) => {
     if (answers.length == 0) {
-        return <td></td>
+        if (questionGroup == "Easy") {
+            return <>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </>
+        } else if (questionGroup == "Medium") {
+            return <>
+                <td>-</td>
+                <td>-</td>
+            </>
+        }
+        return <td>-</td>
     }
     return answers.map((value, index) => {
         return <td>{value}</td>
@@ -60,7 +73,7 @@ const createContentTableForScore = (questionGroup = "Easy", answerScoreArrs = []
 
             <tbody>
                 <tr className="border-0">
-                    {generateColumnScoreByQuestionair(answerScoreArrs)}
+                    {generateColumnScoreByQuestionair(questionGroup, answerScoreArrs)}
                     {/* <td>1</td>
                     <td>1</td>
                     <td>1</td>
@@ -95,7 +108,7 @@ const userScoreDetailContent = (scoreArrs) => {
     </div>)
 }
 
-const tableBodyContent = (data, setHoverIndex = () => {}) => {
+const tableBodyContent = (data, setHoverIndex = () => { }) => {
     return data?.map((element, index) => {
         return (
             <>
