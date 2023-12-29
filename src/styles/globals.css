@@ -36,7 +36,8 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb)); */
-    background: linear-gradient(to bottom, #09203f 0%, #1a3449 60%);
+    /* background: linear-gradient(to bottom, #09203f 0%, #1a3449 60%); */
+    background: linear-gradient(to bottom, #f19af1 0%, #d787e8 60%);
 }
 
 /* .rootBg {
@@ -56,4 +57,16 @@ th:first-child {
 td:last-child,
 th:last-child {
   border-radius: 0 10px 10px 0;
+}
+
+.myImgBg {
+  background-image: url("/icon.png");
+  background-size: cover;
+  resize: both;
+}
+
+body main {
+  background-image: url("/icon.png");
+  background-size: cover;
+  /* resize: both; */
 }

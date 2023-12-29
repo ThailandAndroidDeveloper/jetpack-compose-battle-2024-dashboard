@@ -2,7 +2,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const colorStyle = {
-    primary: "",
+    primary: "#42193e",
+    primaryDarker: "#ffa3f6",
     secondary: "",
     primeTable: "",
     bg: ""
@@ -73,7 +74,7 @@ const generateColumnScoreByQuestionair = (questionGroup, answers) => {
 
 const createContentTableForScore = (questionGroup = "Easy", answerScoreArrs = []) => {
     return <div>
-        <table class="table">
+        <table className="table">
             <thead>
                 {generateHeaderRowQuestionair(questionGroup)}
             </thead>
@@ -87,10 +88,10 @@ const createContentTableForScore = (questionGroup = "Easy", answerScoreArrs = []
     </div>
 }
 const userScoreDetailContent = (scoreArrs) => {
-    return (<div class='overflow-x-auto w-full'>
-        <table className="mx-auto max-w-4xl w-full whitespace-nowrap rounded-box bg-white divide-y divide-gray-300 overflow-hidden">
-            <thead class="bg-gray-900">
-                <tr class="text-white text-left">
+    return (<div className='overflow-x-auto w-full'>
+        <table className="mx-auto max-w-4xl w-full whitespace-nowrap rounded-box bg-white shadow-md my-2 overflow-hidden">
+            <thead className="bg-pink-400">
+                <tr className="text-white text-left">
                     <th className="text-sm uppercase px-6 py-4 text-center">Easy (1 point)</th>
                     <th className="text-sm uppercase px-6 py-4 text-center">Medium (3 point)</th>
                     <th className="text-sm uppercase px-6 py-4 text-center">Hard (5 point)</th>
@@ -115,12 +116,12 @@ const tableBodyContent = (data, setHoverIndex = () => { }) => {
     return data?.map((element, index) => {
         return (
             <>
-                <tbody className="group animate-in fade-in border-opacity-0 bg-gray-800 hover:bg-gray-700">
+                <tbody className="group animate-in fade-in border-opacity-0 bg-[#ffffff] text-black">
                     <tr key={index} clasName="group-hover:bg-700 border-opacity-0 bg-white bg-gray-800 border-0">
-                        <th scope="row" class="text-xl px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white max-w-[10px]" >
+                        <th scope="row" class="text-xl px-6 py-4 font-medium  whitespace-nowrap max-w-[10px]" >
                             {index + 1}
                         </th>
-                        <td class="px-6 py-4 max-w-[100px]">
+                        <td class="px-6 py-4 max-w-[10em]">
                             {/* image */}
                             <div class="avatar">
                                 <div class="w-24 rounded-full">
@@ -128,7 +129,7 @@ const tableBodyContent = (data, setHoverIndex = () => { }) => {
                                 </div>
                             </div>
 
-                            <div class="overflow-ellipsis overflow-hidden">
+                            <div class="overflow-ellipsis overflow-hidden whitespace-nowrap">
                                 Temmies Sammmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
                             </div>
                         </td>
@@ -146,10 +147,10 @@ const tableBodyContent = (data, setHoverIndex = () => { }) => {
                     </tr>
 
                     {/* hidden data */}
-                    <tr className="animate-in fade-in  dark:bg-gray-900">
+                    {/* <tr className="animate-in fade-in  dark:bg-gray-900">
                         <td colSpan={12}>
                             <div tabindex={index} className="collapse focus:outline-none" id={"hover-input-" + index}>
-                                {/* <input type="checkbox" id={"hover-input-"+index} />  */}
+                            
                                 <div className="collapse-content">
                                     <div>
                                         <h1>Score part 1: .....</h1>
@@ -159,7 +160,7 @@ const tableBodyContent = (data, setHoverIndex = () => { }) => {
                                 </div>
                             </div>
                         </td>
-                    </tr>
+                    </tr> */}
 
                 </tbody>
                 {index < data.length - 1 &&
@@ -208,14 +209,18 @@ export default function Dashboard() {
 
     return (
         <main className={`flex min-h-screen flex-col items-center`}>
-            <div className="m-5">
-                <h1 className="text-white text-5xl font-bold">Compose Battle</h1>
+            {/* <div className="min-h-screen myImgBg absolute">
+                <h1></h1>
+            </div> */}
+            <img/>
+            <div className="my-20">
+                <h1 className="text-white text-6xl font-mono font-semibold uppercase">Compose Battle</h1>
             </div>
 
             <div className="w-full mx-auto px-24">
                 <div class="relative overflow-x-auto h-[100vh] shadow-md sm:rounded-lg ">
-                    <table class="w-full text-left text-gray-500 dark:text-gray-400 overscroll-y-auto">
-                        <thead className="text-xs sticky top-0 py-3 text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+                    <table class="w-full text-left text-white overscroll-y-auto">
+                        <thead className={`text-xs sticky top-0 py-3 uppercase bg-pink-500`}
                             style={{ zIndex: "999 !important" }}>
                             {tableHeaderContent()}
                         </thead>
