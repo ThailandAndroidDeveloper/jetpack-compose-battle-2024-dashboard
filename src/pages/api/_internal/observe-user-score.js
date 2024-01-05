@@ -35,22 +35,24 @@ const makeUserScoreEntity = ({ username, totalScore, assignments }) => ({
   ),
 });
 
-function mapDocsToUserScoreEntity(docs) {
-  return docs?.map((doc) =>
-    makeUserScoreEntity({
-      username: doc.username,
-      totalScore: doc.totalScore,
-      assignments: doc.assignments,
-    })
-  );
+function mapDocsToUserScoreEntities(docs) {
+  return docs?.map((doc) => {
+    const data = doc.data();
+
+    return makeUserScoreEntity({
+      username: data.username,
+      totalScore: data.totalScore,
+      assignments: data.assignments,
+    });
+  });
 }
 
 export default function observeUserScore(onData) {
   const query = collection(db, "user_score");
   return onSnapshot(query, {
     next: (snapshot) => {
-      const entity = mapDocsToUserScoreEntity(snapshot.docs);
-      if (onData) onData(entity);
+      const entities = mapDocsToUserScoreEntities(snapshot.docs);
+      if (onData) onData(entities);
     },
     error: (_) => {},
     complete: () => {},
