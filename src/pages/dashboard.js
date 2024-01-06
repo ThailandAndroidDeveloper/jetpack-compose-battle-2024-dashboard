@@ -69,11 +69,11 @@ const generateColumnScoreByQuestionair = (questionGroup, answers) => {
         return <td>-</td>
     }
     return answers.map((value, index) => {
-        return <td>{value}</td>
+        return <td>{value.score}</td>
     })
 }
 
-const createContentTableForScore = (questionGroup = "Easy", answerScoreArrs = []) => {
+const createContentTableForScore = (questionGroup = "Easy", answerScoreArrs) => {
     return <div>
         <table className="table">
             <thead>
@@ -89,7 +89,36 @@ const createContentTableForScore = (questionGroup = "Easy", answerScoreArrs = []
     </div>
 }
 
-const userScoreDetailContent = (scoreArrs) => {
+const userScoreDetailContent = (assignments) => {
+    const easylevelScore = []
+    const mediumLevelScore = []
+    const hardLevelScore = []
+    assignments?.forEach((assignment) => {
+        if (assignment.level == "Easy") {
+            easylevelScore.push({
+                order: parseInt(assignment?.name?.slice(-1) ?? "0"),
+                score: assignment?.score.toString() ?? "-"
+            })
+        } else if (assignment.level == "medium") {
+            mediumLevelScore.push({
+                order: parseInt(assignment?.name?.slice(-1) ?? "0"),
+                score: assignment?.score.toString() ?? "-"
+            })
+        } else {
+            hardLevelScore.push({
+                order: parseInt(assignment?.name?.slice(-1) ?? "0"),
+                score: assignment?.score?.toString() ?? "-"
+            })
+        }
+    })
+
+    console.log(easylevelScore)
+
+    //sort question number
+    easylevelScore?.sort((a, b) => a.order - b.order)
+    mediumLevelScore?.sort((a, b) => a.order - b.order)
+    hardLevelScore?.sort((a, b) => a.order - b.order)
+
     return (<div className='overflow-x-auto w-full'>
         <table className="mx-auto max-w-4xl w-full whitespace-nowrap rounded-box bg-white shadow-md my-2 overflow-hidden">
             <thead className="bg-pink-400">
@@ -103,19 +132,19 @@ const userScoreDetailContent = (scoreArrs) => {
             <tbody>
                 <tr>
                     <td className="text-sm px-6 py-4">
-                        {createContentTableForScore("Easy")}
+                        {createContentTableForScore("Easy", easylevelScore)}
                     </td>
 
-                    <td className="text-sm px-6 py-4">{createContentTableForScore("Medium")}</td>
-                    <td className="text-sm px-6 py-4">{createContentTableForScore("Hard")}</td>
+                    <td className="text-sm px-6 py-4">{createContentTableForScore("Medium", mediumLevelScore)}</td>
+                    <td className="text-sm px-6 py-4">{createContentTableForScore("Hard", hardLevelScore)}</td>
                 </tr>
             </tbody>
         </table>
     </div>)
 }
 
-const tableBodyContent = (data, setHoverIndex = () => { }) => {
-    return data?.map((element, index) => {
+const tableBodyContent = (data) => {
+    return data?.map((user, index) => {
         return (
             <>
                 <tbody className="group animate-in fade-in border-opacity-0 bg-[#ffffff] text-black">
@@ -132,18 +161,18 @@ const tableBodyContent = (data, setHoverIndex = () => { }) => {
                             </div>
 
                             <div class="overflow-ellipsis overflow-hidden whitespace-nowrap">
-                                Temmies Sammmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
+                                {user?.username ?? ""}
                             </div>
                         </td>
 
                         {/* show table of point */}
                         <td class="px-6 py-4" className="text-center py-4">
-                            {userScoreDetailContent()}
+                            {userScoreDetailContent(user?.assignments)}
                         </td>
 
                         {/* show full point */}
                         <td class="px-6 py-4 text-end">
-                            <h1 className="font-bold text-xl">50.44</h1>
+                            <h1 className="font-bold text-xl">{user?.totalScore ?? "0"}</h1>
                         </td>
                     </tr>
 
@@ -175,15 +204,17 @@ const createData = (number) => {
 }
 
 export default function Dashboard() {
-    const [joiner, setJoiner] = useState(createData(50))
+    const [userScores, setuserScores] = useState([])
 
     useEffect(() => {
         observeUserScore((userScores) => {
-          console.log(
-            `Received user score [0] totalScore : ${userScores[0].totalScore}`
-          );
+            setuserScores(userScores)
         });
       }, []);
+
+    useEffect(() => {
+        console.log(userScores)
+    }, [userScores])
 
     return (
         <main className={`flex min-h-screen flex-col items-center`}>
@@ -193,7 +224,7 @@ export default function Dashboard() {
             </div>
 
             <div className="w-full mx-auto px-24">
-                <div class="relative overflow-x-auto h-[100vh] shadow-md sm:rounded-lg ">
+                <div class="relative overflow-x-auto h-[100vh] sm:rounded-lg ">
                     <table class="w-full text-left text-white overscroll-y-auto">
                         <thead className={`text-xs sticky top-0 py-3 uppercase bg-pink-500`}
                             style={{ zIndex: "999 !important" }}>
@@ -205,7 +236,7 @@ export default function Dashboard() {
                                 <div className="mt-3"></div>
                             </td></tr>
                         </tbody>
-                        {tableBodyContent(joiner)}
+                        {tableBodyContent(userScores)}
                     </table>
                 </div>
             </div>
