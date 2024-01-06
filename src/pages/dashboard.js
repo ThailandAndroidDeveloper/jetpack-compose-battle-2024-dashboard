@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import observeUserScore from "./api/_internal/observe-user-score";
 
 const colorStyle = {
     primary: "#42193e",
@@ -87,6 +88,7 @@ const createContentTableForScore = (questionGroup = "Easy", answerScoreArrs = []
         </table>
     </div>
 }
+
 const userScoreDetailContent = (scoreArrs) => {
     return (<div className='overflow-x-auto w-full'>
         <table className="mx-auto max-w-4xl w-full whitespace-nowrap rounded-box bg-white shadow-md my-2 overflow-hidden">
@@ -142,25 +144,8 @@ const tableBodyContent = (data, setHoverIndex = () => { }) => {
                         {/* show full point */}
                         <td class="px-6 py-4 text-end">
                             <h1 className="font-bold text-xl">50.44</h1>
-                            {/* <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a> */}
                         </td>
                     </tr>
-
-                    {/* hidden data */}
-                    {/* <tr className="animate-in fade-in  dark:bg-gray-900">
-                        <td colSpan={12}>
-                            <div tabindex={index} className="collapse focus:outline-none" id={"hover-input-" + index}>
-                            
-                                <div className="collapse-content">
-                                    <div>
-                                        <h1>Score part 1: .....</h1>
-                                        <h1>Score part 2: .....</h1>
-                                        <h1>Score part 3: .....</h1>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr> */}
 
                 </tbody>
                 {index < data.length - 1 &&
@@ -169,16 +154,10 @@ const tableBodyContent = (data, setHoverIndex = () => { }) => {
                             <div className="mt-3"></div>
                         </td></tr>
                     </tbody>
-
                 }
-
             </>
         )
     });
-}
-
-const shaffle = () => {
-
 }
 
 const createData = (number) => {
@@ -197,21 +176,17 @@ const createData = (number) => {
 
 export default function Dashboard() {
     const [joiner, setJoiner] = useState(createData(50))
-    // const [hoverIndex, setHoverIndex] = useState(-1)
 
-    // useEffect(() => {
-    //     console.log("hover " + hoverIndex)
-    //     if (hoverIndex != -1) {
-    //         const hoverId = document.getElementById("hover-input-" + hoverIndex);
-    //         hoverId.focus()
-    //     }
-    // }, [hoverIndex])
+    useEffect(() => {
+        observeUserScore((userScores) => {
+          console.log(
+            `Received user score [0] totalScore : ${userScores[0].totalScore}`
+          );
+        });
+      }, []);
 
     return (
         <main className={`flex min-h-screen flex-col items-center`}>
-            {/* <div className="min-h-screen myImgBg absolute">
-                <h1></h1>
-            </div> */}
             <img/>
             <div className="my-20">
                 <h1 className="text-white text-6xl font-mono font-semibold uppercase">Compose Battle</h1>
