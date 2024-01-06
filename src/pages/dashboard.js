@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import observeUserScore from "./api/_internal/observe-user-score";
+// import { Reorder, animate } from "framer-motion";
 
 const colorStyle = {
     primary: "#42193e",
@@ -13,17 +14,17 @@ const colorStyle = {
 const tableHeaderContent = () => {
     return (<>
         <tr>
-            <th scope="col" className="px-6 py-5 max-w-[10px]">
+            <th scope="col" className="px-6 py-5 max-w-[10px] text-lg">
                 Rank
             </th>
 
-            <th scope="col" className="px-6 text-center">
+            <th scope="col" className="px-6 text-center text-lg">
                 Name
             </th>
-            <th scope="col" className="px-6 text-center">
+            <th scope="col" className="px-6 text-center text-lg">
                 Score Detail
             </th>
-            <th scope="col" className="px-6 text-end">
+            <th scope="col" className="px-6 text-center text-lg">
                 Total Score
             </th>
         </tr>
@@ -32,7 +33,7 @@ const tableHeaderContent = () => {
 
 const generateHeaderRowQuestionair = (questionGroup) => {
     if (questionGroup == "Easy") {
-        return <tr>
+        return <tr className={"text-gray-500 text-lg"}>
             <th>Q1</th>
             <th>Q2</th>
             <th>Q3</th>
@@ -40,12 +41,12 @@ const generateHeaderRowQuestionair = (questionGroup) => {
         </tr>
     }
     else if (questionGroup == "Medium") {
-        return <tr>
+        return <tr className={"text-gray-500 text-lg"}>
             <th>Q5</th>
             <th>Q6</th>
         </tr>
     } else {
-        return <tr>
+        return <tr className={"text-gray-500 text-lg"}>
             <th>Q7</th>
         </tr>
     }
@@ -112,8 +113,6 @@ const userScoreDetailContent = (assignments) => {
         }
     })
 
-    console.log(easylevelScore)
-
     //sort question number
     easylevelScore?.sort((a, b) => a.order - b.order)
     mediumLevelScore?.sort((a, b) => a.order - b.order)
@@ -145,62 +144,42 @@ const userScoreDetailContent = (assignments) => {
 
 const tableBodyContent = (data) => {
     return data?.map((user, index) => {
-        return (
-            <>
-                <tbody className="group animate-in fade-in border-opacity-0 bg-[#ffffff] text-black">
-                    <tr key={index} clasName="group-hover:bg-700 border-opacity-0 bg-white bg-gray-800 border-0">
-                        <th scope="row" class="text-xl px-6 py-4 font-medium  whitespace-nowrap max-w-[10px]" >
-                            {index + 1}
-                        </th>
-                        <td class="px-6 py-4 max-w-[10em]">
-                            {/* image */}
-                            <div class="avatar">
-                                <div class="w-24 rounded-full">
-                                    <img src="https://marketplace.canva.com/EAFHfL_zPBk/1/0/1600w/canva-yellow-inspiration-modern-instagram-profile-picture-kpZhUIzCx_w.jpg" />
-                                </div>
-                            </div>
+        return <>
+            <tr className="border-opacity-0 bg-[#ffffff] text-black">
+                <th scope="row" class="text-3xl px-6 py-4 font-medium  whitespace-nowrap max-w-[80px] text-center" >
+                    <div className="flex-row">
+                        {index == 0 ? (<img width={100} src="/ic_crown.png" className="mx-auto"></img>) : <></>}
+                        {index + 1}
+                    </div>
 
-                            <div class="overflow-ellipsis overflow-hidden whitespace-nowrap">
-                                {user?.username ?? ""}
-                            </div>
-                        </td>
+                </th>
 
-                        {/* show table of point */}
-                        <td class="px-6 py-4" className="text-center py-4">
-                            {userScoreDetailContent(user?.assignments)}
-                        </td>
+                <td class="px-6 py-4 max-w-[10em] text-center">
+                    {/* image */}
+                    <div class="avatar">
+                        <div class="w-24 rounded-full">
+                            <img src="https://marketplace.canva.com/EAFHfL_zPBk/1/0/1600w/canva-yellow-inspiration-modern-instagram-profile-picture-kpZhUIzCx_w.jpg" />
+                        </div>
+                    </div>
 
-                        {/* show full point */}
-                        <td class="px-6 py-4 text-end">
-                            <h1 className="font-bold text-xl">{user?.totalScore ?? "0"}</h1>
-                        </td>
-                    </tr>
+                    <div class="overflow-ellipsis overflow-hidden whitespace-nowrap">
+                        {user?.username ?? ""}
+                    </div>
+                </td>
 
-                </tbody>
-                {index < data.length - 1 &&
-                    <tbody>
-                        <tr className="border-0"><td>
-                            <div className="mt-3"></div>
-                        </td></tr>
-                    </tbody>
-                }
-            </>
-        )
+                {/* show table of point */}
+                <td class="px-6 py-4" className="text-center py-4">
+                    {userScoreDetailContent(user?.assignments)}
+                </td>
+
+                {/* show full point */}
+                <td class="px-6 py-4 text-center">
+                    <h1 className="font-semibold text-2xl">{user?.totalScore ?? "0"}</h1>
+                </td>
+            </tr>
+        </>
+
     });
-}
-
-const createData = (number) => {
-    let arrs = []
-    for (let i = 0; i < number; i++) {
-        arrs.push(
-            {
-                name: "Thitare Nimanong",
-                complete: "5",
-                point: "30"
-            }
-        )
-    }
-    return arrs
 }
 
 export default function Dashboard() {
@@ -210,33 +189,27 @@ export default function Dashboard() {
         observeUserScore((userScores) => {
             setuserScores(userScores)
         });
-      }, []);
-
-    useEffect(() => {
-        console.log(userScores)
-    }, [userScores])
+    }, []);
 
     return (
         <main className={`flex min-h-screen flex-col items-center`}>
-            <img/>
+            <img />
             <div className="my-20">
                 <h1 className="text-white text-6xl font-mono font-semibold uppercase">Compose Battle</h1>
             </div>
 
             <div className="w-full mx-auto px-24">
                 <div class="relative overflow-x-auto h-[100vh] sm:rounded-lg ">
-                    <table class="w-full text-left text-white overscroll-y-auto">
+                    <table class="w-full text-left text-white overscroll-y-auto animate-in fade-in myTable">
                         <thead className={`text-xs sticky top-0 py-3 uppercase bg-pink-500`}
                             style={{ zIndex: "999 !important" }}>
                             {tableHeaderContent()}
                         </thead>
 
                         <tbody>
-                            <tr className="border-0"><td>
-                                <div className="mt-3"></div>
-                            </td></tr>
+                            {tableBodyContent(userScores)}
                         </tbody>
-                        {tableBodyContent(userScores)}
+
                     </table>
                 </div>
             </div>

@@ -70,3 +70,8 @@ body main {
   background-size: cover;
   /* resize: both; */
 }
+
+.myTable {
+  border-collapse:separate; 
+  border-spacing: 0 1em;
+}
