@@ -1,127 +1,243 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import observeUserScore from "./api/_internal/observe-user-score";
 
-const inter = Inter({ subsets: ['latin'] })
+const colorStyle = {
+    primary: "#42193e",
+    primaryDarker: "#ffa3f6",
+    secondary: "",
+    primeTable: "",
+    bg: ""
+}
 
-export default function Home() {
-  return (
-    <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
-    >
-      <div tabindex="0" class="collapse bg-base-200">
-        <div class="collapse-title text-xl font-medium">
-          Focus me to see content
-        </div>
-        <div class="collapse-content">
-          <p>tabindex="0" attribute is necessary to make the div focusable</p>
-        </div>
-      </div>
-      
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/pages/index.js</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+const tableHeaderContent = () => {
+    return (<>
+        <tr>
+            <th scope="col" className="px-6 py-5 max-w-[10px] text-lg">
+                Rank
+            </th>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+            <th scope="col" className="px-6 text-center text-lg">
+                Name
+            </th>
+            <th scope="col" className="px-6 text-center text-lg">
+                Score Detail
+            </th>
+            <th scope="col" className="px-6 text-center text-lg">
+                Total Score
+            </th>
+        </tr>
+    </>)
+}
 
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+const generateHeaderRowQuestionair = (questionGroup) => {
+    if (questionGroup == "Easy") {
+        return <tr className={"text-gray-500 text-lg"}>
+            <th>Q1</th>
+            <th>Q2</th>
+            <th>Q3</th>
+            <th>Q4</th>
+        </tr>
+    }
+    else if (questionGroup == "Medium") {
+        return <tr className={"text-gray-500 text-lg"}>
+            <th>Q5</th>
+            <th>Q6</th>
+        </tr>
+    } else {
+        return <tr className={"text-gray-500 text-lg"}>
+            <th>Q7</th>
+        </tr>
+    }
+}
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
+const generateColumnScoreByQuestionair = (questionGroup, answers) => {
+    if (answers.length == 0) {
+        if (questionGroup == "Easy") {
+            return <>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </>
+        } else if (questionGroup == "Medium") {
+            return <>
+                <td>-</td>
+                <td>-</td>
+            </>
+        }
+        return <td>-</td>
+    }
+    return answers.map((value, index) => {
+        return <td>{value.score}</td>
+    })
+}
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Discover and deploy boilerplate example Next.js&nbsp;projects.
-          </p>
-        </a>
+const createContentTableForScore = (questionGroup = "Easy", answerScoreArrs) => {
+    return <div>
+        <table className="table">
+            <thead>
+                {generateHeaderRowQuestionair(questionGroup)}
+            </thead>
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+            <tbody>
+                <tr className="border-0">
+                    {generateColumnScoreByQuestionair(questionGroup, answerScoreArrs)}
+                </tr>
+            </tbody>
+        </table>
+    </div>
+}
+
+const userScoreDetailContent = (assignments) => {
+    const easylevelScore = []
+    const mediumLevelScore = []
+    const hardLevelScore = []
+    assignments?.forEach((assignment) => {
+        if (assignment.level == "Easy") {
+            easylevelScore.push({
+                order: parseInt(assignment?.name?.slice(-1) ?? "0"),
+                score: assignment?.score.toString() ?? "-"
+            })
+        } else if (assignment.level == "medium") {
+            mediumLevelScore.push({
+                order: parseInt(assignment?.name?.slice(-1) ?? "0"),
+                score: assignment?.score.toString() ?? "-"
+            })
+        } else {
+            hardLevelScore.push({
+                order: parseInt(assignment?.name?.slice(-1) ?? "0"),
+                score: assignment?.score?.toString() ?? "-"
+            })
+        }
+    })
+
+    //sort question number
+    easylevelScore?.sort((a, b) => a.order - b.order)
+    mediumLevelScore?.sort((a, b) => a.order - b.order)
+    hardLevelScore?.sort((a, b) => a.order - b.order)
+
+    return (<div className='overflow-x-auto w-full'>
+        <table className="mx-auto max-w-4xl w-full whitespace-nowrap rounded-box bg-white shadow-md my-2 overflow-hidden">
+            <thead className="bg-pink-400">
+                <tr className="text-white text-left">
+                    <th className="text-sm uppercase px-6 py-4 text-center">Easy (1 point)</th>
+                    <th className="text-sm uppercase px-6 py-4 text-center">Medium (3 point)</th>
+                    <th className="text-sm uppercase px-6 py-4 text-center">Hard (5 point)</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td className="text-sm px-6 py-4">
+                        {createContentTableForScore("Easy", easylevelScore)}
+                    </td>
+
+                    <td className="text-sm px-6 py-4">{createContentTableForScore("Medium", mediumLevelScore)}</td>
+                    <td className="text-sm px-6 py-4">{createContentTableForScore("Hard", hardLevelScore)}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>)
+}
+
+const tableBodyContent = (data) => {
+    return data?.map((user, index) => {
+        return <>
+            <tr className="border-opacity-0 bg-[#ffffff] text-black">
+                <th scope="row" class="text-3xl px-6 py-4 font-medium  whitespace-nowrap max-w-[80px] text-center" >
+                    <div className="flex-row">
+                        {index == 0 ? (<img width={100} src="/ic_crown.png" className="mx-auto"></img>) : <></>}
+                        {index + 1}
+                    </div>
+
+                </th>
+
+                <td class="px-6 py-4 max-w-[10em] text-center">
+                    {/* image */}
+                    <div class="avatar">
+                        <div class="w-24 rounded-full">
+                            <img src="https://marketplace.canva.com/EAFHfL_zPBk/1/0/1600w/canva-yellow-inspiration-modern-instagram-profile-picture-kpZhUIzCx_w.jpg" />
+                        </div>
+                    </div>
+
+                    <div class="overflow-ellipsis overflow-hidden whitespace-nowrap">
+                        {user?.username ?? ""}
+                    </div>
+                </td>
+
+                {/* show table of point */}
+                <td class="px-6 py-4" className="text-center py-4">
+                    {userScoreDetailContent(user?.assignments)}
+                </td>
+
+                {/* show full point */}
+                <td class="px-6 py-4 text-center">
+                    <h1 className="font-semibold text-2xl">{user?.totalScore ?? "0"}</h1>
+                </td>
+            </tr>
+        </>
+
+    });
+}
+
+export default function Dashboard() {
+    const [userScores, setuserScores] = useState([])
+    const [isShowFullTable, setIsShowFullTable] = useState(false)
+    const [scrollPercentage, setScrollPercentage] = useState(0)
+
+    useEffect(() => {
+        observeUserScore((userScores) => {
+            setuserScores(userScores)
+        });
+    }, []);
+
+    // useEffect(() => {
+    //     console.log(scrollPercentage)
+    // }, [scrollPercentage])
+
+    return (
+        <main className={`flex min-h-screen flex-col items-center`}>
+            {
+                isShowFullTable == false && (<div className="mt-20 flex-row text-white" onClick={() => {
+                    setIsShowFullTable(true)
+                }}>
+                    <div className="mx-auto">
+                        <h1 className="text-6xl font-mono font-semibold uppercase">Compose Battle</h1>
+                    </div>
+                    <div className="mx-auto mt-3 flex-row">
+                        <h1 className="mx-auto w-fit">Click here to show table full screen</h1>
+                        <img className="mx-auto" width={40} src="ic_down_arrow.png" />
+                    </div>
+                </div>
+                )
+
+            }
+
+            <div className="w-full mx-auto px-24">
+                <div class="relative overflow-x-auto h-[100vh] sm:rounded-lg ">
+                    <table class="w-full text-left text-white overscroll-y-auto animate-in fade-in myTable">
+                        <thead className={`text-xs sticky top-0 py-3 uppercase bg-pink-500`}
+                            style={{ zIndex: "999 !important" }}>
+                            {tableHeaderContent()}
+                        </thead>
+
+                        <tbody>
+                            {tableBodyContent(userScores)}
+                        </tbody>
+
+                    </table>
+                </div>
+
+                    {/* implement on Scroll percentage */}
+                {
+                    scrollPercentage > 3 && <div className="text-white absolute bottom-3 right-32 " style={{ zIndex: "999 !important" }}>
+                        <div className="border  shadow-lg p-5 rounded-full bg-purple-500 opacity-70">
+                            <h1>Scroll To Top</h1>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </main>)
 }
