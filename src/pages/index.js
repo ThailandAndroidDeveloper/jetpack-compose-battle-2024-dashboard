@@ -85,6 +85,7 @@ const userScoreDetailContent = (assignments) => {
     const easylevelScore = []
     const mediumLevelScore = []
     const hardLevelScore = []
+    //sort item by the name of the firebase data
     assignments?.forEach((assignment) => {
         if (assignment.level == "Easy") {
             easylevelScore.push({
