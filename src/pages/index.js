@@ -2,14 +2,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import observeUserScore from "./api/_internal/observe-user-score";
 
-const colorStyle = {
-    primary: "#42193e",
-    primaryDarker: "#ffa3f6",
-    secondary: "",
-    primeTable: "",
-    bg: ""
-}
-
 const tableHeaderContent = () => {
     return (<>
         <tr>
@@ -99,17 +91,18 @@ const userScoreDetailContent = (assignments) => {
                 order: parseInt(assignment?.name?.slice(-1) ?? "0"),
                 score: assignment?.score.toString() ?? "-"
             })
-        } else if (assignment.level == "medium") {
+        } else if (assignment.level == "Medium") {
             mediumLevelScore.push({
                 order: parseInt(assignment?.name?.slice(-1) ?? "0"),
                 score: assignment?.score.toString() ?? "-"
             })
-        } else {
+        } else if (assignment.level == "Hard") {
             hardLevelScore.push({
                 order: parseInt(assignment?.name?.slice(-1) ?? "0"),
                 score: assignment?.score?.toString() ?? "-"
             })
         }
+        // no Qualify level at final round and need to filter timestamp more
     })
 
     //sort question number
@@ -144,8 +137,8 @@ const userScoreDetailContent = (assignments) => {
 const tableBodyContent = (data) => {
     return data?.map((user, index) => {
         return <>
-            <tr className="border-opacity-0 bg-[#ffffff] text-black">
-                <th scope="row" class="text-3xl px-6 py-4 font-medium  whitespace-nowrap max-w-[80px] text-center" >
+            <tr className="border-opacity-0 bg-[#ffffff] text-black" key={user?.username}>
+                <th scope="row" className="text-3xl px-6 py-4 font-medium  whitespace-nowrap max-w-[80px] text-center" >
                     <div className="flex-row">
                         {index == 0 ? (<img width={100} src="/ic_crown.png" className="mx-auto"></img>) : <></>}
                         {index + 1}
@@ -153,26 +146,26 @@ const tableBodyContent = (data) => {
 
                 </th>
 
-                <td class="px-6 py-4 max-w-[10em] text-center">
+                <td className="px-6 py-4 max-w-[10em] text-center">
                     {/* image */}
-                    <div class="avatar">
-                        <div class="w-24 rounded-full">
+                    <div className="avatar">
+                        <div className="w-24 rounded-full">
                             <img src="https://marketplace.canva.com/EAFHfL_zPBk/1/0/1600w/canva-yellow-inspiration-modern-instagram-profile-picture-kpZhUIzCx_w.jpg" />
                         </div>
                     </div>
 
-                    <div class="overflow-ellipsis overflow-hidden whitespace-nowrap">
+                    <div className="overflow-ellipsis overflow-hidden whitespace-nowrap">
                         {user?.username ?? ""}
                     </div>
                 </td>
 
                 {/* show table of point */}
-                <td class="px-6 py-4" className="text-center py-4">
+                <td className="px-6 py-4 text-center">
                     {userScoreDetailContent(user?.assignments)}
                 </td>
 
                 {/* show full point */}
-                <td class="px-6 py-4 text-center">
+                <td className="px-6 py-4 text-center">
                     <h1 className="font-semibold text-2xl">{user?.totalScore ?? "0"}</h1>
                 </td>
             </tr>
@@ -188,13 +181,10 @@ export default function Dashboard() {
 
     useEffect(() => {
         observeUserScore((userScores) => {
+            console.log(userScores)
             setuserScores(userScores)
         });
     }, []);
-
-    // useEffect(() => {
-    //     console.log(scrollPercentage)
-    // }, [scrollPercentage])
 
     return (
         <main className={`flex min-h-screen flex-col items-center`}>
@@ -215,8 +205,8 @@ export default function Dashboard() {
             }
 
             <div className="w-full mx-auto px-24">
-                <div class="relative overflow-x-auto h-[100vh] sm:rounded-lg ">
-                    <table class="w-full text-left text-white overscroll-y-auto animate-in fade-in myTable">
+                <div className="relative overflow-x-auto h-[100vh] sm:rounded-lg ">
+                    <table className="w-full text-left text-white overscroll-y-auto animate-in fade-in myTable">
                         <thead className={`text-xs sticky top-0 py-3 uppercase bg-pink-500`}
                             style={{ zIndex: "999 !important" }}>
                             {tableHeaderContent()}
