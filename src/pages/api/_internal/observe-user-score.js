@@ -49,12 +49,17 @@ function mapDocsToUserScoreEntities(docs) {
 
 export default function observeUserScore(onData) {
   const userScoreRef = collection(db, "user_score")
-  return onSnapshot(query(userScoreRef, orderBy("totalScore", "desc")), {
+  const mQuery = query(userScoreRef, orderBy("totalScore", "desc"), orderBy("timestamp"));
+  return onSnapshot((mQuery), {
     next: (snapshot) => {
       const entities = mapDocsToUserScoreEntities(snapshot.docs);
       if (onData) onData(entities);
     },
-    error: (_) => {},
-    complete: () => {},
+    error: (e) => {
+      console.error(e)
+    },
+    complete: () => {
+      console.log("complete fetching")
+    },
   });
 }
