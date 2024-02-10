@@ -1,8 +1,5 @@
 {
   "projects": {
-    "production": "compose-at-first-sight-2024",
     "default": "compose-at-first-sight-2024"
-  },
-  "targets": {},
-  "etags": {}
+  }
 }
