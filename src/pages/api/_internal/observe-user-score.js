@@ -1,5 +1,6 @@
 import app from "@/firebase";
 import { getFirestore, collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import competitorJson from "@root/competitor.json" assert {type: 'json'};
 
 const db = getFirestore(app);
 
@@ -21,7 +22,7 @@ const makeAssignmentEntity = ({ order, name, level, score, devices }) => ({
   ),
 });
 
-const makeUserScoreEntity = ({ username, totalScore, assignments }) => ({
+const makeUserScoreEntity = ({ username, totalScore, assignments, fullname, imgProfile }) => ({
   username,
   totalScore,
   assignments: assignments?.map((x, index) =>
@@ -33,18 +34,29 @@ const makeUserScoreEntity = ({ username, totalScore, assignments }) => ({
       devices: x.devices,
     })
   ),
+  fullname,
+  imgProfile
 });
 
 function mapDocsToUserScoreEntities(docs) {
   return docs?.map((doc) => {
     const data = doc.data();
+    const mapperGithubProfile = mapGithubUserToImagePicture(data.username)
+    console.log("my mapper", mapperGithubProfile)
 
     return makeUserScoreEntity({
       username: data.username,
       totalScore: data.totalScore,
       assignments: data.assignments,
+      fullname: mapperGithubProfile?.name ?? "-",
+      imgProfile: mapperGithubProfile?.photo ?? null
     });
   });
+}
+
+function mapGithubUserToImagePicture(username) {
+  if (competitorJson[username] === undefined) return null
+  return competitorJson[username]
 }
 
 export default function observeUserScore(onData) {
