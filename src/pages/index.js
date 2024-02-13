@@ -44,25 +44,26 @@ const generateHeaderRowQuestionair = (questionGroup) => {
 }
 
 const generateColumnScoreByQuestionair = (questionGroup, answers) => {
-    if (answers.length == 0) {
-        if (questionGroup == "Easy") {
-            return <>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-            </>
-        } else if (questionGroup == "Medium") {
-            return <>
-                <td>-</td>
-                <td>-</td>
-            </>
-        }
-        return <td>-</td>
+    var arrayOrderNumber;
+    if (questionGroup == "Easy") {
+        arrayOrderNumber = [1, 2, 3, 4]
+    } else if (questionGroup == "Medium") {
+        arrayOrderNumber = [1, 2]
+    } else if (questionGroup == "Hard") {
+        arrayOrderNumber = [1]
     }
-    return answers.map((value, index) => {
-        return <td>{value.score}</td>
-    })
+
+    return arrayOrderNumber.map((value, index) => {
+        var answer = answers.shift()
+        if (value != answer?.order ?? -1) {
+            return <td>0.0000</td>
+        } else {
+            return <td>{answer.score}</td>
+        }
+    });
+    // return answers.map((value, index) => {
+    //     return <td>{value.score}</td>
+    // })
 }
 
 const createContentTableForScore = (questionGroup = "Easy", answerScoreArrs) => {
@@ -90,17 +91,17 @@ const userScoreDetailContent = (assignments) => {
         if (assignment.level == "Easy") {
             easylevelScore.push({
                 order: parseInt(assignment?.name?.slice(-1) ?? "0"),
-                score: assignment?.score.toString() ?? "-"
+                score: cutScoreString(assignment?.score ?? 0)
             })
         } else if (assignment.level == "Medium") {
             mediumLevelScore.push({
                 order: parseInt(assignment?.name?.slice(-1) ?? "0"),
-                score: assignment?.score.toString() ?? "-"
+                score: cutScoreString(assignment?.score ?? 0)
             })
         } else if (assignment.level == "Hard") {
             hardLevelScore.push({
                 order: parseInt(assignment?.name?.slice(-1) ?? "0"),
-                score: assignment?.score?.toString() ?? "-"
+                score: cutScoreString(assignment?.score ?? 0)
             })
         }
         // no Qualify level at final round and need to filter timestamp more
@@ -135,6 +136,20 @@ const userScoreDetailContent = (assignments) => {
     </div>)
 }
 
+const cutScoreString = (score) => {
+    if (score == 0) return "0.0000"
+    return score.toLocaleString("en-US", { minimumFractionDigits: 4 })
+}
+
+const competitors = [
+    {
+        "akexorcist": {
+            "name": "Somkiat Khitwongwattana",
+            "photo": "/image/competitor/akexorcist.jpg"
+        }
+    }
+]
+
 const tableBodyContent = (data) => {
     return data?.map((user, index) => {
         return <>
@@ -149,11 +164,21 @@ const tableBodyContent = (data) => {
 
                 <td className="px-6 py-4 max-w-[10em] text-center">
                     {/* image */}
-                    <div className="avatar">
-                        <div className="w-24 rounded-full">
-                            <img src="https://marketplace.canva.com/EAFHfL_zPBk/1/0/1600w/canva-yellow-inspiration-modern-instagram-profile-picture-kpZhUIzCx_w.jpg" />
-                        </div>
-                    </div>
+                    {
+                        user?.imgProfile ? <>
+                            <div className="avatar">
+                                <div className="w-24 rounded-full">
+                                    <img src={user.imgProfile} />
+                                </div>
+                            </div>
+                        </> : <>
+                            <div className="avatar">
+                                <div className="w-24 rounded-full">
+                                    <img src="https://marketplace.canva.com/EAFHfL_zPBk/1/0/1600w/canva-yellow-inspiration-modern-instagram-profile-picture-kpZhUIzCx_w.jpg" />
+                                </div>
+                            </div>
+                        </>
+                    }
 
                     <div className="overflow-ellipsis overflow-hidden whitespace-nowrap">
                         {user?.username ?? ""}
@@ -167,7 +192,7 @@ const tableBodyContent = (data) => {
 
                 {/* show full point */}
                 <td className="px-6 py-4 text-center">
-                    <h1 className="font-semibold text-2xl">{user?.totalScore ?? "0"}</h1>
+                    <h1 className="font-semibold text-2xl">{cutScoreString(user?.totalScore ?? 0)}</h1>
                 </td>
             </tr>
         </>
@@ -220,7 +245,7 @@ export default function Dashboard() {
                     </table>
                 </div>
 
-                    {/* implement on Scroll percentage */}
+                {/* implement on Scroll percentage */}
                 {
                     scrollPercentage > 3 && <div className="text-white absolute bottom-3 right-32 " style={{ zIndex: "999 !important" }}>
                         <div className="border  shadow-lg p-5 rounded-full bg-purple-500 opacity-70">
