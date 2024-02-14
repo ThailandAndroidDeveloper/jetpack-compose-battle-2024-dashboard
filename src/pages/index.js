@@ -35,32 +35,46 @@ const generateColumnScoreByQuestionair = (questionGroup, answers) => {
 
     return arrayOrderNumber.map((value, index) => {
         var answer = answers.shift()
-        if (value != answer?.order ?? -1) {
-            return <td>0.0000</td>
+
+        if (questionGroup == "Easy") {
+            return <div className="w-1/2 min-w-[4rem] bg-teal-50 mx-2 shadow-lg shadow-dark-rose">
+                <div className="flex flex-col text-center py-4">
+                    <div className="text-teal-600">
+                        {questionGroup + " " + (index + 1)}
+                    </div>
+                    <div className="text-gray-900 font-semibold text-xl mt-4">
+                        {value != answer?.order ?? -1 ? "0.000" : answer.score}
+                    </div>
+                </div>
+            </div> 
+        } else if (questionGroup == "Medium") {
+            return <div className="w-1/2 min-w-[4rem] bg-amber-50 mx-2 shadow-lg shadow-dark-rose">
+                <div className="flex flex-col text-center py-4">
+                    <div className="text-amber-600">
+                        {questionGroup + " " + (index + 1)}
+                    </div>
+                    <div className="text-gray-900 font-semibold text-xl mt-4">
+                        {value != answer?.order ?? -1 ? "0.000" : answer.score}
+                    </div>
+                </div>
+            </div> 
+        } else if (questionGroup == "Hard") {
+            return <div className="w-1/2 min-w-[4rem] bg-red-50 mx-2 shadow-lg shadow-dark-rose">
+                <div className="flex flex-col text-center py-4">
+                    <div className="text-red-600">
+                        {questionGroup + " " + (index + 1)}
+                    </div>
+                    <div className="text-gray-900 font-semibold text-xl mt-4">
+                        {value != answer?.order ?? -1 ? "0.000" : answer.score}
+                    </div>
+                </div>
+            </div>   
         } else {
-            return <td>{answer.score}</td>
+            return <></>
         }
     });
-    // return answers.map((value, index) => {
-    //     return <td>{value.score}</td>
-    // })
 }
 
-const createContentTableForScore = (questionGroup = "Easy", answerScoreArrs) => {
-    return <div>
-        <table className="table">
-            <thead>
-                {generateHeaderRowQuestionair(questionGroup)}
-            </thead>
-
-            <tbody>
-                <tr className="border-0">
-                    {generateColumnScoreByQuestionair(questionGroup, answerScoreArrs)}
-                </tr>
-            </tbody>
-        </table>
-    </div>
-}
 
 const userScoreDetailContent = (assignments) => {
     const easylevelScore = []
@@ -92,25 +106,18 @@ const userScoreDetailContent = (assignments) => {
     mediumLevelScore?.sort((a, b) => a.order - b.order)
     hardLevelScore?.sort((a, b) => a.order - b.order)
 
-    return (<div className='overflow-x-auto w-full'>
-        <table >
-            <tbody>
-                <tr>
-                    <td className="text-sm px-6 py-4">
-                        {createContentTableForScore("Easy", easylevelScore)}
-                    </td>
-
-                    <td className="text-sm px-6 py-4">{createContentTableForScore("Medium", mediumLevelScore)}</td>
-                    <td className="text-sm px-6 py-4">{createContentTableForScore("Hard", hardLevelScore)}</td>
-                </tr>
-            </tbody>
-        </table>
+    return (<div className='flex flex-row w-full h-32 px-4'>
+        {generateColumnScoreByQuestionair("Easy", easylevelScore)}
+        <div className="w-40" />
+        {generateColumnScoreByQuestionair("Medium", mediumLevelScore)}
+        <div className="w-40" />
+        {generateColumnScoreByQuestionair("Hard", hardLevelScore)}
     </div>)
 }
 
 const cutScoreString = (score) => {
     if (score == 0) return "0.0000"
-    return score.toLocaleString("en-US", { minimumFractionDigits: 4 })
+    return score.toLocaleString("en-US", { minimumFractionDigits: 3 })
 }
 
 const contestantScores = (data) => {
@@ -135,7 +142,7 @@ const contestantScores = (data) => {
                                     {
                                         user?.imgProfile 
                                         ? <img className="size-24 aspect-square object-cover rounded-full border-4 border-rose-300" src={user.imgProfile} /> 
-                                        : <div  className="size-24 rounded-full border-4 border-rose-300"></div>
+                                        : <div className="size-24 rounded-full border-4 border-rose-300"></div>
                                     }
                                 </div>
                                 
@@ -150,13 +157,13 @@ const contestantScores = (data) => {
                         </td>
 
                         {/* show table of point */}
-                        <td className="w-4/8 px-6 py-4 bg-white text-center">
+                        <td className="w-4/8">
                             {userScoreDetailContent(user?.assignments)}
                         </td>
 
                         {/* show full point */}
                         <td className="w-[20rem] min-w-[12rem] bg-rose-200 text-center">
-                            <h1 className="font-semibold text-4xl text-gray-900">{cutScoreString(user?.totalScore ?? 0)}</h1>
+                            <div className="font-semibold text-4xl text-gray-900">{cutScoreString(user?.totalScore ?? 0)}</div>
                         </td>
                     </tr>
                     <tr className="h-4"></tr>
