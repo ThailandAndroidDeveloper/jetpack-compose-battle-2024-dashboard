@@ -1,46 +1,46 @@
 {
     "Krirati": {
         "name": "Krirati Kanittapayark",
-        "photo": "/image/competitor/Krirati.png"
+        "photo": "/image/contestant/krirati-kanittapayark.webp"
     },
     "T-Khanittha": {
         "name": "Khanittha Silasit",
-        "photo": "/image/competitor/T-Khanittha.png"
+        "photo": "/image/contestant/khanittha-silasit.webp"
     },
     "belizwp": {
         "name": "Nakarin Kakanumporn",
-        "photo": "/image/competitor/belizwp.png"
+        "photo": "/image/contestant/nakarin-kakanumporn.webp"
     },
     "GinglePie": {
         "name": "Narattarwan Phasukarratchai",
-        "photo": "/image/competitor/GinglePie.png"
+        "photo": "/image/contestant/narattarwan-phasukarratchai.webp"
     },
     "5akda": {
         "name": "Sakda Suwantheerangkoon",
-        "photo": "/image/competitor/5akda.png"
+        "photo": "/image/contestant/sakda-suwantheerangkoon.webp"
     },
     "logomount": {
         "name": "Fedor Erofeev",
-        "photo": "/image/competitor/logomount.png"
+        "photo": "/image/contestant/fedor-erofeev.webp"
     },
     "ThanathipPhummek": {
         "name": "Thanathip Phummek",
-        "photo": "/image/competitor/ThanathipPhummek.png"
+        "photo": "/image/contestant/thanathip-phummek.webp"
     },
     "RoyleKoonlert": {
         "name": "Royle Koonlert",
-        "photo": "/image/competitor/RoyleKoonlert.png"
+        "photo": "/image/contestant/royle-koonlert.webp"
     },
     "akexorcist": {
         "name": "Somkiat Khitwongwattana",
-        "photo": "/image/competitor/akexorcist.png"
+        "photo": "/image/contestant/staff-ake.webp"
     },
     "goodjobguy1234": {
         "name": "Thitare Nimanong",
-        "photo": "/image/competitor/goodjobguy1234.png"
+        "photo": "/image/contestant/staff-bam.webp"
     },
-    "xx": {
+    "Judrummer": {
         "name": "Tipatai Puthanukunkit",
-        "photo": null
+        "photo": "/image/contestant/staff-ju.webp"
     }
 }
