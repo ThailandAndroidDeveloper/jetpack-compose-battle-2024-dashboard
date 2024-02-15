@@ -108,9 +108,9 @@ const userScoreDetailContent = (assignments) => {
 
     return (<div className='flex flex-row w-full h-32 px-4'>
         {generateColumnScoreByQuestionair("Easy", easylevelScore)}
-        <div className="w-40" />
+        <div className="w-20" />
         {generateColumnScoreByQuestionair("Medium", mediumLevelScore)}
-        <div className="w-40" />
+        <div className="w-20" />
         {generateColumnScoreByQuestionair("Hard", hardLevelScore)}
     </div>)
 }
@@ -118,6 +118,21 @@ const userScoreDetailContent = (assignments) => {
 const parseDisplayScore = (score) => {
     if (score == 0) return "0"
     return parseFloat(score.toFixed(3))
+}
+
+const getTotalScore = (user) => {
+    let totalScore = user?.assignments.reduce((prev, assignment) => {
+        if (assignment.level == "Easy") {
+            return prev + assignment.score
+        } else if (assignment.level == "Medium") {
+            return prev + (assignment.score * 3)
+        } else if (assignment.level == "Hard") {
+            return prev + (assignment.score * 5)
+        } else {
+            return 0
+        }
+    }, 0) ?? 0
+    return parseDisplayScore(totalScore)
 }
 
 const contestantScores = (data) => {
@@ -163,7 +178,7 @@ const contestantScores = (data) => {
 
                         {/* show full point */}
                         <td className="w-[20rem] min-w-[12rem] bg-rose-200 text-center">
-                            <div className="font-semibold text-4xl text-gray-900">{parseDisplayScore(user?.totalScore ?? 0)}</div>
+                            <div className="font-semibold text-4xl text-gray-900">{getTotalScore(user)}</div>
                         </td>
                     </tr>
                     <tr className="h-4"></tr>
@@ -172,14 +187,13 @@ const contestantScores = (data) => {
         </>
     });
 }
-
+ 
 export default function Dashboard() {
     const [userScores, setuserScores] = useState([])
     const [scrollPercentage, _] = useState(0)
 
     useEffect(() => {
         observeUserScore((userScores) => {
-            console.log(userScores)
             setuserScores(userScores)
         });
     }, []);
