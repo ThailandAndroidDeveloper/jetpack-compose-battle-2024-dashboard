@@ -46,26 +46,3 @@ body {
 ::-webkit-scrollbar {
   display: none;
 }
-
-/* Set border-radius on the top-left and bottom-left of the first table data on the table row */
-td:first-child,
-th:first-child {
-  border-radius: 10px 0 0 10px;
-}
-
-/* Set border-radius on the top-right and bottom-right of the last table data on the table row */
-td:last-child,
-th:last-child {
-  border-radius: 0 10px 10px 0;
-}
-
-.myImgBg {
-  background-image: url("/icon.png");
-  background-size: cover;
-  resize: both;
-}
-
-.myTable {
-  border-collapse:separate; 
-  border-spacing: 0 1em;
-}

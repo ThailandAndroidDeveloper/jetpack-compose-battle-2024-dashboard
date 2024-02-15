@@ -42,7 +42,6 @@ function mapDocsToUserScoreEntities(docs) {
   return docs?.map((doc) => {
     const data = doc.data();
     const mapperGithubProfile = mapGithubUserToImagePicture(data.username)
-    console.log("my mapper", mapperGithubProfile)
 
     return makeUserScoreEntity({
       username: data.username,

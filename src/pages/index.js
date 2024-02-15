@@ -2,26 +2,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import observeUserScore from "./api/_internal/observe-user-score";
 
-const tableHeaderContent = () => {
-    return (<>
-        <tr>
-            <th scope="col" className="px-6 py-5 max-w-[10px] text-lg">
-                Rank
-            </th>
-
-            <th scope="col" className="px-6 text-center text-lg">
-                Name
-            </th>
-            <th scope="col" className="px-6 text-center text-lg">
-                Score Detail
-            </th>
-            <th scope="col" className="px-6 text-center text-lg">
-                Total Score
-            </th>
-        </tr>
-    </>)
-}
-
 const generateHeaderRowQuestionair = (questionGroup) => {
     if (questionGroup == "Easy") {
         return <tr className={"text-gray-500 text-lg"}>
@@ -55,32 +35,46 @@ const generateColumnScoreByQuestionair = (questionGroup, answers) => {
 
     return arrayOrderNumber.map((value, index) => {
         var answer = answers.shift()
-        if (value != answer?.order ?? -1) {
-            return <td>0.0000</td>
+
+        if (questionGroup == "Easy") {
+            return <div className="w-1/2 min-w-[4rem] bg-teal-50 mx-2 shadow-lg shadow-dark-rose">
+                <div className="flex flex-col text-center py-4">
+                    <div className="text-teal-600">
+                        {questionGroup + " " + (index + 1)}
+                    </div>
+                    <div className="text-gray-900 font-semibold text-xl mt-4">
+                        {value != answer?.order ?? -1 ? "0" : answer.score}
+                    </div>
+                </div>
+            </div> 
+        } else if (questionGroup == "Medium") {
+            return <div className="w-1/2 min-w-[4rem] bg-amber-50 mx-2 shadow-lg shadow-dark-rose">
+                <div className="flex flex-col text-center py-4">
+                    <div className="text-amber-600">
+                        {questionGroup + " " + (index + 1)}
+                    </div>
+                    <div className="text-gray-900 font-semibold text-xl mt-4">
+                        {value != answer?.order ?? -1 ? "0" : answer.score}
+                    </div>
+                </div>
+            </div> 
+        } else if (questionGroup == "Hard") {
+            return <div className="w-1/2 min-w-[4rem] bg-red-50 mx-2 shadow-lg shadow-dark-rose">
+                <div className="flex flex-col text-center py-4">
+                    <div className="text-red-600">
+                        {questionGroup + " " + (index + 1)}
+                    </div>
+                    <div className="text-gray-900 font-semibold text-xl mt-4">
+                        {value != answer?.order ?? -1 ? "0" : answer.score}
+                    </div>
+                </div>
+            </div>   
         } else {
-            return <td>{answer.score}</td>
+            return <></>
         }
     });
-    // return answers.map((value, index) => {
-    //     return <td>{value.score}</td>
-    // })
 }
 
-const createContentTableForScore = (questionGroup = "Easy", answerScoreArrs) => {
-    return <div>
-        <table className="table">
-            <thead>
-                {generateHeaderRowQuestionair(questionGroup)}
-            </thead>
-
-            <tbody>
-                <tr className="border-0">
-                    {generateColumnScoreByQuestionair(questionGroup, answerScoreArrs)}
-                </tr>
-            </tbody>
-        </table>
-    </div>
-}
 
 const userScoreDetailContent = (assignments) => {
     const easylevelScore = []
@@ -91,17 +85,17 @@ const userScoreDetailContent = (assignments) => {
         if (assignment.level == "Easy") {
             easylevelScore.push({
                 order: parseInt(assignment?.name?.slice(-1) ?? "0"),
-                score: cutScoreString(assignment?.score ?? 0)
+                score: parseDisplayScore(assignment?.score ?? 0)
             })
         } else if (assignment.level == "Medium") {
             mediumLevelScore.push({
                 order: parseInt(assignment?.name?.slice(-1) ?? "0"),
-                score: cutScoreString(assignment?.score ?? 0)
+                score: parseDisplayScore((assignment?.score * 3) ?? 0)
             })
         } else if (assignment.level == "Hard") {
             hardLevelScore.push({
                 order: parseInt(assignment?.name?.slice(-1) ?? "0"),
-                score: cutScoreString(assignment?.score ?? 0)
+                score: parseDisplayScore((assignment?.score * 5) ?? 0)
             })
         }
         // no Qualify level at final round and need to filter timestamp more
@@ -112,137 +106,103 @@ const userScoreDetailContent = (assignments) => {
     mediumLevelScore?.sort((a, b) => a.order - b.order)
     hardLevelScore?.sort((a, b) => a.order - b.order)
 
-    return (<div className='overflow-x-auto w-full'>
-        <table className="mx-auto max-w-4xl w-full whitespace-nowrap rounded-box bg-white shadow-md my-2 overflow-hidden">
-            <thead className="bg-pink-400">
-                <tr className="text-white text-left">
-                    <th className="text-sm uppercase px-6 py-4 text-center">Easy (1 point)</th>
-                    <th className="text-sm uppercase px-6 py-4 text-center">Medium (3 point)</th>
-                    <th className="text-sm uppercase px-6 py-4 text-center">Hard (5 point)</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                <tr>
-                    <td className="text-sm px-6 py-4">
-                        {createContentTableForScore("Easy", easylevelScore)}
-                    </td>
-
-                    <td className="text-sm px-6 py-4">{createContentTableForScore("Medium", mediumLevelScore)}</td>
-                    <td className="text-sm px-6 py-4">{createContentTableForScore("Hard", hardLevelScore)}</td>
-                </tr>
-            </tbody>
-        </table>
+    return (<div className='flex flex-row w-full h-32 px-4'>
+        {generateColumnScoreByQuestionair("Easy", easylevelScore)}
+        <div className="w-20" />
+        {generateColumnScoreByQuestionair("Medium", mediumLevelScore)}
+        <div className="w-20" />
+        {generateColumnScoreByQuestionair("Hard", hardLevelScore)}
     </div>)
 }
 
-const cutScoreString = (score) => {
-    if (score == 0) return "0.0000"
-    return score.toLocaleString("en-US", { minimumFractionDigits: 4 })
+const parseDisplayScore = (score) => {
+    if (score == 0) return "0"
+    return parseFloat(score.toFixed(3))
 }
 
-const competitors = [
-    {
-        "akexorcist": {
-            "name": "Somkiat Khitwongwattana",
-            "photo": "/image/competitor/akexorcist.jpg"
+const getTotalScore = (user) => {
+    let totalScore = user?.assignments.reduce((prev, assignment) => {
+        if (assignment.level == "Easy") {
+            return prev + assignment.score
+        } else if (assignment.level == "Medium") {
+            return prev + (assignment.score * 3)
+        } else if (assignment.level == "Hard") {
+            return prev + (assignment.score * 5)
+        } else {
+            return 0
         }
-    }
-]
+    }, 0) ?? 0
+    return parseDisplayScore(totalScore)
+}
 
-const tableBodyContent = (data) => {
+const contestantScores = (data) => {
     return data?.map((user, index) => {
         return <>
-            <tr className="border-opacity-0 bg-[#ffffff] text-black" key={user?.username}>
-                <th scope="row" className="text-3xl px-6 py-4 font-medium  whitespace-nowrap max-w-[80px] text-center" >
-                    <div className="flex-row">
-                        {index == 0 ? (<img width={100} src="/ic_crown.png" className="mx-auto"></img>) : <></>}
-                        {index + 1}
-                    </div>
+            <table className="w-full">
+                <tbody>
+                    <tr className="p-3 shadow-lg shadow-dark-rose" key={user?.username}>
+                        <td className="w-[15rem] min-w-[15rem] px-6 py-4 bg-white">
+                            <div className="flex flex-col items-center">
+                                <div className="stack">
+                                    {index == 0 ? (<img className="size-24 aspect-square" src="/image/rank/first.png"></img>) : <></>}
+                                    {index == 1 ? (<img className="absolute size-24 aspect-square" src="/image/rank/second.png"></img>) : <></>}
+                                    {index == 2 ? (<img className="absolute size-24 aspect-square" src="/image/rank/third.png"></img>) : <></>}
+                                    {index == 3 ? (<img className="absolute size-24 aspect-square" src="/image/rank/fourth.png"></img>) : <></>}
+                                    {index == 4 ? (<img className="absolute size-24 aspect-square" src="/image/rank/fifth.png"></img>) : <></>}
+                                    {index == 5 ? (<img className="absolute size-24 aspect-square" src="/image/rank/sixth.png"></img>) : <></>}
+                                    {index == 6 ? (<img className="absolute size-24 aspect-square" src="/image/rank/seventh.png"></img>) : <></>}
+                                    {index == 7 ? (<img className="absolute size-24 aspect-square" src="/image/rank/eighth.png"></img>) : <></>}
+                                    {index == 8 ? (<img className="absolute size-24 aspect-square" src="/image/rank/ninth.png"></img>) : <></>}
+                                    {index == 9 ? (<img className="absolute size-24 aspect-square" src="/image/rank/tenth.png"></img>) : <></>}
+                                    {
+                                        user?.imgProfile 
+                                        ? <img className="size-24 aspect-square object-cover rounded-full border-4 border-rose-300" src={user.imgProfile} /> 
+                                        : <div className="size-24 rounded-full border-4 border-rose-300"></div>
+                                    }
+                                </div>
+                                
+                                <div className="mt-2 overflow-ellipsis overflow-hidden whitespace-nowrap text-xl text-rose-600">
+                                    {user?.username ?? ""}
+                                </div>
 
-                </th>
-
-                <td className="px-6 py-4 max-w-[10em] text-center">
-                    {/* image */}
-                    {
-                        user?.imgProfile ? <>
-                            <div className="avatar">
-                                <div className="w-24 rounded-full">
-                                    <img src={user.imgProfile} />
+                                <div className="overflow-ellipsis overflow-hidden whitespace-nowrap text-xs text-gray-900">
+                                    {user?.fullname ?? ""}
                                 </div>
                             </div>
-                        </> : <>
-                            <div className="avatar">
-                                <div className="w-24 rounded-full">
-                                    <img src="https://marketplace.canva.com/EAFHfL_zPBk/1/0/1600w/canva-yellow-inspiration-modern-instagram-profile-picture-kpZhUIzCx_w.jpg" />
-                                </div>
-                            </div>
-                        </>
-                    }
+                        </td>
 
-                    <div className="overflow-ellipsis overflow-hidden whitespace-nowrap">
-                        {user?.username ?? ""}
-                    </div>
-                </td>
+                        {/* show table of point */}
+                        <td className="w-4/8">
+                            {userScoreDetailContent(user?.assignments)}
+                        </td>
 
-                {/* show table of point */}
-                <td className="px-6 py-4 text-center">
-                    {userScoreDetailContent(user?.assignments)}
-                </td>
-
-                {/* show full point */}
-                <td className="px-6 py-4 text-center">
-                    <h1 className="font-semibold text-2xl">{cutScoreString(user?.totalScore ?? 0)}</h1>
-                </td>
-            </tr>
+                        {/* show full point */}
+                        <td className="w-[20rem] min-w-[12rem] bg-rose-200 text-center">
+                            <div className="font-semibold text-4xl text-gray-900">{getTotalScore(user)}</div>
+                        </td>
+                    </tr>
+                    <tr className="h-4"></tr>
+                </tbody>
+            </table>
         </>
-
     });
 }
-
+ 
 export default function Dashboard() {
     const [userScores, setuserScores] = useState([])
-    const [isShowFullTable, setIsShowFullTable] = useState(false)
-    const [scrollPercentage, setScrollPercentage] = useState(0)
+    const [scrollPercentage, _] = useState(0)
 
     useEffect(() => {
         observeUserScore((userScores) => {
-            console.log(userScores)
             setuserScores(userScores)
         });
     }, []);
 
     return (
-        <main className={`flex min-h-screen flex-col items-center`}>
-            {
-                isShowFullTable == false && (<div className="mt-20 flex-row text-white" onClick={() => {
-                    setIsShowFullTable(true)
-                }}>
-                    <div className="mx-auto">
-                        <h1 className="text-6xl font-mono font-semibold uppercase">Compose Battle</h1>
-                    </div>
-                    <div className="mx-auto mt-3 flex-row">
-                        <h1 className="mx-auto w-fit">Click here to show table full screen</h1>
-                        <img className="mx-auto" width={40} src="ic_down_arrow.png" />
-                    </div>
-                </div>
-                )
-
-            }
-
-            <div className="w-full mx-auto px-24">
-                <div className="relative overflow-x-auto h-[100vh] sm:rounded-lg ">
-                    <table className="w-full text-left text-white overscroll-y-auto animate-in fade-in myTable">
-                        <thead className={`text-xs sticky top-0 py-3 uppercase bg-pink-500`}
-                            style={{ zIndex: "999 !important" }}>
-                            {tableHeaderContent()}
-                        </thead>
-
-                        <tbody>
-                            {tableBodyContent(userScores)}
-                        </tbody>
-
-                    </table>
+        <main className={`flex min-h-screen flex-col items-center bg-white`}>
+            <div className="w-full">
+                <div className="relative px-8 my-8 overflow-scroll">
+                    {contestantScores(userScores)}
                 </div>
 
                 {/* implement on Scroll percentage */}
