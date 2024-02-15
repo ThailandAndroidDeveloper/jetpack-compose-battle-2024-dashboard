@@ -8,10 +8,11 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'myTopHeader': '#fa34f3',
-        'myTopHeaderTextColor': "#00000",
         'dark-rose': '#1B02091F'
       },
+    },
+    screens: {
+      'expand': '1250px',
     },
   },
   plugins: [

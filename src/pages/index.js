@@ -172,7 +172,7 @@ const contestantScores = (data) => {
                         </td>
 
                         {/* show table of point */}
-                        <td className="w-4/8">
+                        <td className="hidden expand:inline expand:w-4/8">
                             {userScoreDetailContent(user?.assignments)}
                         </td>
 
