@@ -43,7 +43,7 @@ const generateColumnScoreByQuestionair = (questionGroup, answers) => {
                         {questionGroup + " " + (index + 1)}
                     </div>
                     <div className="text-gray-900 font-semibold text-xl mt-4">
-                        {value != answer?.order ?? -1 ? "0.000" : answer.score}
+                        {value != answer?.order ?? -1 ? "0" : answer.score}
                     </div>
                 </div>
             </div> 
@@ -54,7 +54,7 @@ const generateColumnScoreByQuestionair = (questionGroup, answers) => {
                         {questionGroup + " " + (index + 1)}
                     </div>
                     <div className="text-gray-900 font-semibold text-xl mt-4">
-                        {value != answer?.order ?? -1 ? "0.000" : answer.score}
+                        {value != answer?.order ?? -1 ? "0" : answer.score}
                     </div>
                 </div>
             </div> 
@@ -65,7 +65,7 @@ const generateColumnScoreByQuestionair = (questionGroup, answers) => {
                         {questionGroup + " " + (index + 1)}
                     </div>
                     <div className="text-gray-900 font-semibold text-xl mt-4">
-                        {value != answer?.order ?? -1 ? "0.000" : answer.score}
+                        {value != answer?.order ?? -1 ? "0" : answer.score}
                     </div>
                 </div>
             </div>   
@@ -85,17 +85,17 @@ const userScoreDetailContent = (assignments) => {
         if (assignment.level == "Easy") {
             easylevelScore.push({
                 order: parseInt(assignment?.name?.slice(-1) ?? "0"),
-                score: cutScoreString(assignment?.score ?? 0)
+                score: parseDisplayScore(assignment?.score ?? 0)
             })
         } else if (assignment.level == "Medium") {
             mediumLevelScore.push({
                 order: parseInt(assignment?.name?.slice(-1) ?? "0"),
-                score: cutScoreString(assignment?.score ?? 0)
+                score: parseDisplayScore((assignment?.score * 3) ?? 0)
             })
         } else if (assignment.level == "Hard") {
             hardLevelScore.push({
                 order: parseInt(assignment?.name?.slice(-1) ?? "0"),
-                score: cutScoreString(assignment?.score ?? 0)
+                score: parseDisplayScore((assignment?.score * 5) ?? 0)
             })
         }
         // no Qualify level at final round and need to filter timestamp more
@@ -115,9 +115,9 @@ const userScoreDetailContent = (assignments) => {
     </div>)
 }
 
-const cutScoreString = (score) => {
-    if (score == 0) return "0.0000"
-    return score.toLocaleString("en-US", { minimumFractionDigits: 3 })
+const parseDisplayScore = (score) => {
+    if (score == 0) return "0"
+    return parseFloat(score.toFixed(3))
 }
 
 const contestantScores = (data) => {
@@ -163,7 +163,7 @@ const contestantScores = (data) => {
 
                         {/* show full point */}
                         <td className="w-[20rem] min-w-[12rem] bg-rose-200 text-center">
-                            <div className="font-semibold text-4xl text-gray-900">{cutScoreString(user?.totalScore ?? 0)}</div>
+                            <div className="font-semibold text-4xl text-gray-900">{parseDisplayScore(user?.totalScore ?? 0)}</div>
                         </td>
                     </tr>
                     <tr className="h-4"></tr>
