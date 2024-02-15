@@ -143,21 +143,21 @@ const contestantScores = (data) => {
                     <tr className="p-3 shadow-lg shadow-dark-rose" key={user?.username}>
                         <td className="w-[15rem] min-w-[15rem] px-6 py-4 bg-white">
                             <div className="flex flex-col items-center">
-                                <div className="stack">
-                                    {index == 0 ? (<img className="size-24 aspect-square" src="/image/rank/first.webp"></img>) : <></>}
-                                    {index == 1 ? (<img className="size-24 aspect-square" src="/image/rank/second.webp"></img>) : <></>}
-                                    {index == 2 ? (<img className="size-24 aspect-square" src="/image/rank/third.webp"></img>) : <></>}
-                                    {index == 3 ? (<img className="size-24 aspect-square" src="/image/rank/fourth.webp"></img>) : <></>}
-                                    {index == 4 ? (<img className="size-24 aspect-square" src="/image/rank/fifth.webp"></img>) : <></>}
-                                    {index == 5 ? (<img className="size-24 aspect-square" src="/image/rank/sixth.webp"></img>) : <></>}
-                                    {index == 6 ? (<img className="size-24 aspect-square" src="/image/rank/seventh.webp"></img>) : <></>}
-                                    {index == 7 ? (<img className="size-24 aspect-square" src="/image/rank/eighth.webp"></img>) : <></>}
-                                    {index == 8 ? (<img className="size-24 aspect-square" src="/image/rank/ninth.webp"></img>) : <></>}
-                                    {index == 9 ? (<img className="size-24 aspect-square" src="/image/rank/tenth.webp"></img>) : <></>}
+                                <div className="stack max-h-[8rem] aspect-square">
+                                    {index == 0 ? (<img src="/image/rank/first.webp"></img>) : <></>}
+                                    {index == 1 ? (<img src="/image/rank/second.webp"></img>) : <></>}
+                                    {index == 2 ? (<img src="/image/rank/third.webp"></img>) : <></>}
+                                    {index == 3 ? (<img src="/image/rank/fourth.webp"></img>) : <></>}
+                                    {index == 4 ? (<img src="/image/rank/fifth.webp"></img>) : <></>}
+                                    {index == 5 ? (<img src="/image/rank/sixth.webp"></img>) : <></>}
+                                    {index == 6 ? (<img src="/image/rank/seventh.webp"></img>) : <></>}
+                                    {index == 7 ? (<img src="/image/rank/eighth.webp"></img>) : <></>}
+                                    {index == 8 ? (<img src="/image/rank/ninth.webp"></img>) : <></>}
+                                    {index == 9 ? (<img src="/image/rank/tenth.webp"></img>) : <></>}
                                     {
                                         user?.imgProfile 
-                                        ? <img className="size-24 aspect-square object-cover rounded-full border-4 border-rose-300" src={user.imgProfile} /> 
-                                        : <div className="size-24 rounded-full border-4 border-rose-300"></div>
+                                        ? <img className="aspect-square object-cover rounded-full border-4 border-rose-300" src={user.imgProfile} /> 
+                                        : <div className="rounded-full border-4 border-rose-300"></div>
                                     }
                                 </div>
                                 
@@ -172,7 +172,7 @@ const contestantScores = (data) => {
                         </td>
 
                         {/* show table of point */}
-                        <td className="hidden expand:inline expand:w-4/8">
+                        <td className="hidden expand:table-cell expand:w-4/8 h-full">
                             {userScoreDetailContent(user?.assignments)}
                         </td>
 
