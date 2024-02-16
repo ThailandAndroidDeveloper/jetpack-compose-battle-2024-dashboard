@@ -46,7 +46,7 @@ const generateColumnScoreByQuestionair = (questionGroup, answers) => {
                         {value != answer?.order ?? -1 ? "0" : answer.score}
                     </div>
                 </div>
-            </div> 
+            </div>
         } else if (questionGroup == "Medium") {
             return <div className="w-1/2 min-w-[4rem] bg-amber-50 mx-2 shadow-lg shadow-dark-rose">
                 <div className="flex flex-col text-center py-4">
@@ -187,14 +187,45 @@ const contestantScores = (data) => {
         </>
     });
 }
- 
+
+const getTotalScoreInt = (user) => {
+    return user?.assignments.reduce((prev, assignment) => {
+        if (assignment.level == "Easy") {
+            return prev + assignment.score
+        } else if (assignment.level == "Medium") {
+            return prev + (assignment.score * 3)
+        } else if (assignment.level == "Hard") {
+            return prev + (assignment.score * 5)
+        } else {
+            return 0
+        }
+    }, 0) ?? 0
+}
+
 export default function Dashboard() {
     const [userScores, setuserScores] = useState([])
     const [scrollPercentage, _] = useState(0)
 
     useEffect(() => {
         observeUserScore((userScores) => {
-            setuserScores(userScores)
+            const list = userScores?.map((value, index) => {
+                return {
+                    ...value,
+                    totalScoreForOrder: getTotalScoreInt(value)
+                }
+            })
+
+
+            list.sort((a, b) => {
+                if (a.totalScoreForOrder !== b.totalScoreForOrder) {
+                    return b.totalScoreForOrder - a.totalScoreForOrder; // Descending order of totalScore
+                }
+                //     // If totalScore is the same, compare by timestamp
+                return a.timestamp - b.timestamp; // Ascending order of timestamp
+            })
+
+            console.log("addtotalScoreForOrder", list)
+            setuserScores(list)
         });
     }, []);
 

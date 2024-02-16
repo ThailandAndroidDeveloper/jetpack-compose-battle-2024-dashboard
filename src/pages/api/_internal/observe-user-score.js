@@ -22,7 +22,7 @@ const makeAssignmentEntity = ({ order, name, level, score, devices }) => ({
   ),
 });
 
-const makeUserScoreEntity = ({ username, totalScore, assignments, fullname, imgProfile }) => ({
+const makeUserScoreEntity = ({ username, totalScore, assignments, fullname, imgProfile, timestamp }) => ({
   username,
   totalScore,
   assignments: assignments?.map((x, index) =>
@@ -35,7 +35,8 @@ const makeUserScoreEntity = ({ username, totalScore, assignments, fullname, imgP
     })
   ),
   fullname,
-  imgProfile
+  imgProfile,
+  timestamp
 });
 
 function mapDocsToUserScoreEntities(docs) {
@@ -48,7 +49,8 @@ function mapDocsToUserScoreEntities(docs) {
       totalScore: data.totalScore,
       assignments: data.assignments,
       fullname: mapperGithubProfile?.name ?? "-",
-      imgProfile: mapperGithubProfile?.photo ?? null
+      imgProfile: mapperGithubProfile?.photo ?? null,
+      timestamp: data.timestamp
     });
   });
 }
@@ -60,7 +62,7 @@ function mapGithubUserToImagePicture(username) {
 
 export default function observeUserScore(onData) {
   const userScoreRef = collection(db, "user_score")
-  const mQuery = query(userScoreRef, orderBy("totalScore", "desc"), orderBy("timestamp"));
+  const mQuery = query(userScoreRef);
   return onSnapshot((mQuery), {
     next: (snapshot) => {
       const entities = mapDocsToUserScoreEntities(snapshot.docs);
