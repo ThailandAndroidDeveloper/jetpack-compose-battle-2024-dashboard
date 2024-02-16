@@ -31,16 +31,12 @@
         "name": "Royle Koonlert",
         "photo": "/image/contestant/royle-koonlert.webp"
     },
-    "akexorcist": {
-        "name": "Somkiat Khitwongwattana",
-        "photo": "/image/contestant/staff-ake.webp"
+    "arohim": {
+        "name": "Abdulrohim Sama",
+        "photo": "/image/contestant/abdulrohim-sama.webp"
     },
-    "goodjobguy1234": {
-        "name": "Thitare Nimanong",
-        "photo": "/image/contestant/staff-bam.webp"
-    },
-    "Judrummer": {
-        "name": "Tipatai Puthanukunkit",
-        "photo": "/image/contestant/staff-ju.webp"
+    "yopachara": {
+        "name": "Pachara Sukcharoen",
+        "photo": "/image/contestant/pachara-sukcharoen.webp"
     }
 }
